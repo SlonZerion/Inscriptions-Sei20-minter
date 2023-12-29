@@ -46,7 +46,8 @@ def main(private_key: str):
                 sleep(random.uniform(2, 3))
                 switch_to_window_title(driver, 'Sei 20')
 
-                for count_mint in range(random.randrange(SELF_MINT_COUNT[0], SELF_MINT_COUNT[1])):
+                max_mint_count = random.randrange(SELF_MINT_COUNT[0], SELF_MINT_COUNT[1])
+                for count_mint in range(max_mint_count):
                     for t in range(MAX_TRIES_FOR_MINT):
                         try:
                             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[text() = 'Mint']"))).click()
@@ -57,13 +58,13 @@ def main(private_key: str):
                             switch_to_window_title(driver, 'Sei 20')
                             sleep(random.uniform(0.8, 1.5))
                             WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[text() = 'Close']"))).click()
-                            logger.success(f"{private_key[:10]}... | SUCCESS MINT | {count_mint+1}")
+                            logger.success(f"{private_key[:10]}... | SUCCESS MINT | {count_mint+1}/{max_mint_count+1}")
                             mint_wait_time = random.randrange(round(NEXT_MINT_MIN_WAIT_TIME), round(NEXT_MINT_MAX_WAIT_TIME))
                             with console.status(f"[bold green]Wait {mint_wait_time}s", spinner="simpleDotsScrolling") as status:
                                 sleep(mint_wait_time)
                             break
                         except:
-                            logger.warning(f"{private_key[:10]}... | FAIL MINT | {count_mint+1} | TRY {t+1}/{MAX_TRIES_FOR_MINT}")
+                            logger.warning(f"{private_key[:10]}... | FAIL MINT | {count_mint+1}/{max_mint_count+1} | TRY {t+1}/{MAX_TRIES_FOR_MINT}")
             break
         except:
             ex = get_error_message()
